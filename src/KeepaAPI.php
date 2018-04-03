@@ -1,6 +1,6 @@
 <?php
 
-// use JsonMapper;
+// use Keepa;
 use Keepa\API\Request;
 use Keepa\API\Response;
 use Keepa\API\ResponseStatus;

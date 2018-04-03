@@ -327,17 +327,72 @@ class Product
      */
     public $eanList = null;
 
+
+    //手動追加分
+
     /**
-     * Keepa 手動追加分
-     *
+     * States the last time we have updated the product rating and review count. null if not available.
+     * @var int
      */
-     public $lastRatingUpdate = null;
+     public $lastRatingUpdate = 0;
+
+     /**
+      * Author. null if not available.
+      * @var string|null
+      */
      public $author = null;
+
+     /**
+      * Binding. null if not available.
+      * @var array|null
+      */
      public $binding = null;
-     public $numberOfItems = null;
-     public $numberOfPages = null;
-     public $publicationDate = null;
-     public $releaseDate = null;
+
+     /**
+      * NumberOfItems. null if not available.
+      * @var int
+      */
+     public $numberOfItems = 0;
+
+     /**
+      * NumberOfPages. null if not available.
+      * @var int
+      */
+     public $numberOfPages = 0;
+
+     /**
+      * PublicationDate. null if not available.
+      * @var int
+      */
+     public $publicationDate = 0;
+
+     /**
+      * ReleaseDate. null if not available.
+      * @var int
+      */
+     public $releaseDate = 0;
+
+     /**
+      * Description. null if not available.
+      * @var string|null
+      */
      public $description = null;
-     // public $hazardousMaterialType = 0;
+
+     /**
+      * HazardousMaterialType. null if not available.
+      * @var int|null
+      */
+     public $hazardousMaterialType = 0;
+
+     /**
+      * Features. null if not available.
+      * @var string[]|null
+      */
+     public $features = null;
+
+     /**
+      * An item can have one or more languages. Each language entry has a name and a type. Some also have an audio format. null if not available.
+      * @var array|null
+      */
+     public $languages = null;
 }
