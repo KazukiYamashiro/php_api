@@ -1,7 +1,6 @@
 <?php
-namespace Keepa;
 
-use JsonMapper;
+// use JsonMapper;
 use Keepa\API\Request;
 use Keepa\API\Response;
 use Keepa\API\ResponseStatus;
