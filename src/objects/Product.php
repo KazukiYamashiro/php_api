@@ -326,4 +326,18 @@ class Product
      * @var string[]|null
      */
     public $eanList = null;
+
+    /**
+     * Keepa 手動追加分
+     *
+     */
+     public $lastRatingUpdate = null;
+     public $author = null;
+     public $binding = null;
+     public $numberOfItems = null;
+     public $numberOfPages = null;
+     public $publicationDate = null;
+     public $releaseDate = null;
+     public $description = null;
+     // public $hazardousMaterialType = 0;
 }
