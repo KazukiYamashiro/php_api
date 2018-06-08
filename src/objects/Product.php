@@ -1,4 +1,5 @@
 <?php
+
 namespace Keepa\objects;
 
 use Keepa\KeepaAPI;
@@ -334,65 +335,83 @@ class Product
      * States the last time we have updated the product rating and review count. null if not available.
      * @var int
      */
-     public $lastRatingUpdate = 0;
+    public $lastRatingUpdate = 0;
 
-     /**
-      * Author. null if not available.
-      * @var string|null
-      */
-     public $author = null;
+    /**
+     * Author. null if not available.
+     * @var string|null
+     */
+    public $author = null;
 
-     /**
-      * Binding. null if not available.
-      * @var array|null
-      */
-     public $binding = null;
+    /**
+     * Binding. null if not available.
+     * @var array|null
+     */
+    public $binding = null;
 
-     /**
-      * NumberOfItems. null if not available.
-      * @var int
-      */
-     public $numberOfItems = 0;
+    /**
+     * NumberOfItems. null if not available.
+     * @var int
+     */
+    public $numberOfItems = 0;
 
-     /**
-      * NumberOfPages. null if not available.
-      * @var int
-      */
-     public $numberOfPages = 0;
+    /**
+     * NumberOfPages. null if not available.
+     * @var int
+     */
+    public $numberOfPages = 0;
 
-     /**
-      * PublicationDate. null if not available.
-      * @var int
-      */
-     public $publicationDate = 0;
+    /**
+     * PublicationDate. null if not available.
+     * @var int
+     */
+    public $publicationDate = 0;
 
-     /**
-      * ReleaseDate. null if not available.
-      * @var int
-      */
-     public $releaseDate = 0;
+    /**
+     * ReleaseDate. null if not available.
+     * @var int
+     */
+    public $releaseDate = 0;
 
-     /**
-      * Description. null if not available.
-      * @var string|null
-      */
-     public $description = null;
+    /**
+     * Description. null if not available.
+     * @var string|null
+     */
+    public $description = null;
 
-     /**
-      * HazardousMaterialType. null if not available.
-      * @var int|null
-      */
-     public $hazardousMaterialType = 0;
+    /**
+     * HazardousMaterialType. null if not available.
+     * @var int|null
+     */
+    public $hazardousMaterialType = 0;
 
-     /**
-      * Features. null if not available.
-      * @var string[]|null
-      */
-     public $features = null;
+    /**
+     * Features. null if not available.
+     * @var string[]|null
+     */
+    public $features = null;
 
-     /**
-      * An item can have one or more languages. Each language entry has a name and a type. Some also have an audio format. null if not available.
-      * @var array|null
-      */
-     public $languages = null;
+    /**
+     * An item can have one or more languages. Each language entry has a name and a type. Some also have an audio format. null if not available.
+     * @var array|null
+     */
+    public $languages = null;
+
+    /**
+     * liveOffersOrder. null if not available.
+     * @var array|null
+     */
+    public $liveOffersOrder = null;
+
+    /**
+     * newPriceIsMAP
+     * @var bool|null
+     */
+    public $newPriceIsMAP = false;
+
+    /**
+     * coupon. null if not available.
+     * @var array|null
+     */
+    public $coupon = null;
 }
