@@ -103,4 +103,81 @@ class Stats
      * @var mixed|null
      */
     public $lightningDealInfo = null;
+
+    //追加分
+    /**
+     * stockPerCondition3rdFBA
+     * @var int[]|null
+     */
+    public $stockPerCondition3rdFBA = null;
+    /**
+     * stockPerConditionFBM
+     * @var int[]|null
+     */
+    public $stockPerConditionFBM = null;
+    /**
+     * stockAmazon
+     * @var int
+     */
+    public $stockAmazon = 0;
+    /**
+     * stockBuyBox
+     * @var int
+     */
+    public $stockBuyBox = 0;
+    /**
+     * retrievedOfferCount
+     * @var int
+     */
+    public $retrievedOfferCount = 0;
+    /**
+     * buyBoxPrice
+     * @var int
+     */
+    public $buyBoxPrice = 0;
+    /**
+     * buyBoxShipping
+     * @var int
+     */
+    public $buyBoxShipping = 0;
+    /**
+     * buyBoxIsUnqualified
+     * @var bool|null
+     */
+    public $buyBoxIsUnqualified = false;
+    /**
+     * buyBoxIsShippable
+     * @var bool|null
+     */
+    public $buyBoxIsShippable = false;
+    /**
+     * buyBoxIsPreorder
+     * @var bool|null
+     */
+    public $buyBoxIsPreorder = false;
+    /**
+     * buyBoxIsFBA
+     * @var bool|null
+     */
+    public $buyBoxIsFBA = false;
+    /**
+     * buyBoxIsAmazon
+     * @var bool|null
+     */
+    public $buyBoxIsAmazon = false;
+    /**
+     * buyBoxIsMAP
+     * @var bool|null
+     */
+    public $buyBoxIsMAP = false;
+    /**
+     * isAddonItem
+     * @var bool|null
+     */
+    public $isAddonItem = false;
+    /**
+     * totalOfferCount
+     * @var int
+     */
+    public $totalOfferCount = 0;
 }
