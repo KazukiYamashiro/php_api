@@ -39,10 +39,28 @@ class Response
     public $refillRate = null;
 
     /**
-     * time the request took, in milliseconds
+     * total time the request took (local, including latencies and connection establishment), in milliseconds
      * @var int
      */
     public $requestTime = null;
+
+    /**
+     * time the request's processing took (remote), in milliseconds
+     * @var int
+     */
+    public $processingTimeInMs = 0;
+
+    /**
+     * Token flow reduction
+     * @var float
+     */
+    public $tokenFlowReduction = -1;
+
+    /**
+     * Tokens used for call
+     * @var int
+     */
+    public $tokensConsumed = 0;
 
     /**
      * Status of the request.
@@ -93,6 +111,12 @@ class Response
     public $error = null;
 
     /**
+     * Contains request specific additional output.
+     * @var string|null
+     */
+    public $additional = null;
+
+    /**
      * Contains information about any error that might have occurred.
      * @var \Keepa\objects\Tracking[]
      */
@@ -103,6 +127,18 @@ class Response
      * @var string[]|null
      */
     public $asinList = null;
+
+    /**
+     * A list of sellerIds.
+     * @var string[]|null
+     */
+    public $sellerIdList = null;
+
+    /**
+     * Estimated count of all matched products.
+     * @var int|null
+     */
+    public $totalResults = null;
 
     function __construct(Request $request)
     {

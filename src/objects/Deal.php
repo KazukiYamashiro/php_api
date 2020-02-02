@@ -90,7 +90,7 @@ class Deal
     /**
      * Array of Amazon category node ids {@link Category#catId} this product is listed in. Can be empty.<br>
      * Example: [569604]
-     * @var int|null
+     * @var int[]|null
      */
     public $categories = null;
 
@@ -108,6 +108,13 @@ class Deal
      */
     public $lightningEnd = 0;
 
+    /**
+     * Limit to products with a minimum rating (A rating is an integer from 0 to 50 (e.g. 45 = 4.5 stars)).
+     * If -1 the filter is inactive.
+     * Example: 20 (= min. rating of 2 stars)
+     * @var int|null
+     */
+    public $minRating = -1;
 
     /**
      * Available deal ranges.

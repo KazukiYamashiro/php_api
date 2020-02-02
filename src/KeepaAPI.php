@@ -2,6 +2,8 @@
 namespace Keepa;
 
 use JsonMapper;
+use Keepa\API\CurlClient;
+use Keepa\API\HttpClientInterface;
 use Keepa\API\Request;
 use Keepa\API\Response;
 use Keepa\API\ResponseStatus;
@@ -13,11 +15,12 @@ class KeepaAPI
     private $accessKey = null;
     private $userAgent = null;
     private $serializer = null;
+    private $httpClient = null;
 
     public function __construct($accessKey)
     {
         $this->accessKey = $accessKey;
-        $this->userAgent = "KEEPA-PHP Framework-" . "1.26";
+        $this->userAgent = "KEEPA-PHP Framework-" . "1.40";
         $this->serializer = new JsonMapper();
 
         if (PHP_INT_SIZE != 8)
@@ -39,33 +42,23 @@ class KeepaAPI
         /* @var Response */
         $response = new Response($r);
 
-        // create curl resource
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
-        curl_setopt($ch, CURLOPT_ENCODING, "gzip");
+        // create client
+        $client = $this->getHttpClient()
+            ->setUrl($url)
+            ->setUserAgent($this->userAgent);
 
         if ($r->postData != null) {
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $r->postData);
+            $client->setPostData($r->postData);
         }
-
-        //return the transfer as a string
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
 
         $responseTime = microtime(true);
 
+        $client->get();
+
         // $output contains the output string
-        $output = curl_exec($ch);
+        $output = $client->getBody();
 
-        if ($output === false)
-            throw new \Exception(curl_error($ch));
-
-        $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $responseCode = $client->getResponseCode();
         if ($responseCode == 200) {
             try {
                 $jo = json_decode($output);
@@ -115,7 +108,6 @@ class KeepaAPI
 
 
         // close curl resource to free up system resources
-        curl_close($ch);
         $response->url = $url;
         $response->requestTime = intval((microtime(true) - $responseTime) * 1000);
 
@@ -157,10 +149,28 @@ class KeepaAPI
                     $lastResponse = $result;
                     $retry++;
                     $delay = min(2 * $expoDelay + 100, self::MAX_DELAY);
-                    continue;
+                    continue 2;
                 default:
                     return $result;
             }
         }
+    }
+
+    public function setHttpClient($client)
+    {
+        $this->httpClient = $client;
+    }
+
+    /**
+     * Returns a suitable HttpClient
+     * @return HttpClientInterface
+     */
+    protected function getHttpClient()
+    {
+        if(!$this->httpClient){
+            $this->httpClient = new CurlClient;
+        }
+
+        return $this->httpClient;
     }
 }

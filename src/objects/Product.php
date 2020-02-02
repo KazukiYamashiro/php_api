@@ -1,6 +1,7 @@
 <?php
 namespace Keepa\objects;
 
+use Keepa\helper\CategoryTreeEntry;
 use Keepa\KeepaAPI;
 
 class Product
@@ -89,6 +90,16 @@ class Product
      */
     public $trackingSince = 0;
 
+
+    /**
+     * States the time the item was first listed on Amazon, in Keepa Time minutes.<br>
+     * It is updated in conjunction with the offers request, but always accessible.<br>
+     * This timestamp is only available for some products. If not available the field has the value 0.
+     * Use {@link KeepaTime#keepaMinuteToUnixInMillis(int)} (long)} to get an uncompressed timestamp (Unix epoch time).
+     * @var int
+     */
+    public $listedSince = 0;
+
     /**
      * An item's brand. null if not available.
      * @var string|null
@@ -174,6 +185,72 @@ class Product
     public $format = null;
 
     /**
+     * The item’s author. null if not available.
+     * @var string|null
+     */
+    public $author = null;
+
+    /**
+     * Represents the category tree as an ordered array of CategoryTreeEntry objects.
+     * @var string|null
+     */
+    public $binding = null;
+
+    /**
+     * Represents the category tree as an ordered array of CategoryTreeEntry objects.
+     * @var \Keepa\helper\CategoryTreeEntry[]|null
+     */
+    public $categoryTree = null;
+
+    /**
+     * The number of items of this product. -1 if not available.
+     * @var int
+     */
+    public $numberOfItems = -1;
+
+    /**
+     * The number of pages of this product. -1 if not available.
+     * @var int
+     */
+    public $numberOfPages = -1;
+
+    /**
+     * The item’s publication date in one of the following three formats:<br>
+     * YYYY or YYYYMM or YYYYMMDD (Y= year, M = month, D = day)<br>
+     * -1 if not available.<br><br>
+     * Examples:<br>
+     * 1978 = the year 1978<br>
+     * 200301 = January 2003<br>
+     * 20150409 = April 9th, 2015
+     * @var int
+     */
+    public $publicationDate = -1;
+
+    /**
+     * The item’s release date in one of the following three formats:<br>
+     * YYYY or YYYYMM or YYYYMMDD (Y= year, M = month, D = day)<br>
+     * -1 if not available.<br><br>
+     * Examples:<br>
+     * 1978 = the year 1978<br>
+     * 200301 = January 2003<br>
+     * 20150409 = April 9th, 2015
+     * @var int
+     */
+    public $releaseDate = -1;
+
+    /**
+     * An item can have one or more languages. Each language entry has a name and a type.
+     * Some also have an audio format. null if not available.<br><br>
+     * Examples:<br>
+     * [ [ “English”, “Published” ], [ “English”, “Original Language” ] ]<br>
+     * With audio format:<br>
+     * [ [ “Englisch”, “Originalsprache”, “DTS-HD 2.0” ], [ “Deutsch”, null, “DTS-HD 2.0” ] ]
+     * @var mixed|null
+     */
+    public $languages = null;
+
+
+    /**
      * A list of the product features / bullet points. null if not available.
      * An entry can contain HTML markup in rare cases. We currently limit each entry to a maximum of 1000 characters
      * (if the feature is longer it will be cut off). This limitation may change in the future without prior notice.
@@ -226,6 +303,39 @@ class Product
     public $packageQuantity = -1;
 
     /**
+     * The item's height in millimeter. 0 or -1 if not available.
+     * @var int
+     */
+    public $itemHeight = -1;
+
+    /**
+     * The item's length in millimeter. 0 or -1 if not available.
+     * @var int
+     */
+    public $itemLength = -1;
+
+    /**
+     * The item's width in millimeter. 0 or -1 if not available.
+     * @var int
+     */
+    public $itemWidth = -1;
+
+    /**
+     * The item's weight in gram. 0 or -1 if not available.
+     * @var int
+     */
+    public $itemWeight = -1;
+
+    /**
+     * Contains the lowest priced matching eBay listing Ids.
+     * Always contains two entries, the first one is the listing id of the lowest priced listing in new condition,
+     * the second in used condition. null or 0 if not available.<br>
+     * Example: [ 273344490183, 0
+     * @var integer[]|null
+     */
+    public $ebayListingIds = null;
+
+    /**
      * Indicates if the item is considered to be for adults only.
      * @var bool
      */
@@ -257,6 +367,28 @@ class Product
      */
     public $lastPriceChange = 0; // minutes Keepa Epoch
 
+
+    /**
+     * States the last time we have updated the eBay prices for this product, in Keepa Time minutes.<br>
+     * If no matching products were found the integer is negative.
+     * Use {@link KeepaTime#keepaMinuteToUnixInMillis(int)} (long)} to get an uncompressed timestamp (Unix epoch time).
+     * @var int
+     */
+    public $lastEbayUpdate = 0;
+
+    /**
+     * Availability of the Amazon offer {@link Product.AvailabilityType}.
+     * @var int
+     */
+    public $availabilityAmazon = -1;
+
+    /**
+     * States the last time we have updated the product rating and review count, in Keepa Time minutes.<br>
+     * Use {@link KeepaTime#keepaMinuteToUnixInMillis(int)} (long)} to get an uncompressed timestamp (Unix epoch time).
+     * @var int
+     */
+    public $lastRatingUpdate = 0;
+
     /**
      * Keepa product type {@link Product.ProductType}. Must always be evaluated first.
      * @var int
@@ -280,6 +412,23 @@ class Product
      * @var \Keepa\objects\Offer[]|null
      */
     public $offers = null;
+
+
+    /**
+     * Optional field. Only set if the offers parameter was used in the Product Request.<br>
+     * Contains an ordered array of index positions in the offers array for all Marketplace Offer Objects114 retrieved for this call.<br>
+     * The sequence of integers reflects the ordering of the offers on the Amazon offer page (for all conditions).<br>
+     * Since the offers field contains historical offers as well as current offers, one can use this array to <br>
+     * look up all offers that are currently listed on Amazon in the correct order. <br><br>
+     * Example:<br> [ 3, 5, 2, 18, 15 ] - The offer with the array index 3 of the offers field is currently the first <br>
+     *     one listed on the offer listings page on Amazon, followed by the offer with the index 5, and so on.<br><br>
+     * Example with duplicates:<br> [ 3, 5, 2, 18, 5 ] - The second offer, as listed on Amazon, is a lower priced duplicate <br>
+     *     of the 6th offer on Amazon. The lower priced one is included in the offers field at index 5.
+     *
+     * Optional field.
+     * @var int[]|null
+     */
+    public $liveOffersOrder = null;
 
     /**
      * Optional field. Only set if the offers parameter was used in the Product Request.<br>
@@ -344,10 +493,37 @@ class Product
     public $promotions = null;
 
     /**
+     * Contains the dimension attributes for up to 50 variations of this product. Only available on parent ASINs.
+     * @var \Keepa\helper\VariationObject[]|null
+     */
+    public $variations = null;
+
+
+    /**
+     * Contains coupon details if any are available for the product. null if not available.
+     * Integer array with always two entries: The first entry is the discount of a one time coupon, the second is a subscribe and save coupon.
+     * Entry value is either 0 if no coupon of that type is offered, positive for an absolute discount or negative for a percentage discount.
+     * The coupons field is always accessible, but only updated if the offers parameter was used in the Product Request.
+     * <p>Example:<br>
+     *        [ 200, -15 ] - Both coupon types available: $2 one time discount or 15% for subscribe and save.<br>
+     *      [ -7, 0 ] - Only one time coupon type is available offering a 7% discount.
+     * </p>
+     * @var int[]|null
+     */
+    public $coupon = null;
+
+    /**
      * Whether or not the current new price is MAP restricted. Can be used to differentiate out of stock vs. MAP restricted prices (as in both cases the current price is -1).
      * @var bool|null
      */
-    public $newPriceIsMAP = false;
+    public $newPriceIsMAP = null;
+
+
+    /**
+     * FBA fees for this product. If FBA fee information has not yet been collected for this product the field will be null.
+     * @var \Keepa\helper\FBAFeesObject|null
+     */
+    public $fbaFees = null;
 
     /**
      * A list of UPC assigned to this product. The first index is the primary UPC. null if not available.

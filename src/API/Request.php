@@ -2,6 +2,7 @@
 namespace Keepa\API;
 
 use Keepa\helper\KeepaTime;
+use Keepa\objects\ProductFinderRequest;
 
 /**
  * Common Request
@@ -192,7 +193,10 @@ class Request
     {
         $r = new Request();
         $r->path = "product";
-        $r->parameter["asin"] = implode(",", $asins);
+
+        if (!empty($asins))
+            $r->parameter["asin"] = implode(",", $asins);
+
         $r->parameter["domain"] = $domainID;
         $r->parameter["update"] = $update;
         $r->parameter["history"] = $history ? "1" : "0";
@@ -337,6 +341,40 @@ class Request
 
         return $r;
     }
+
+    /**
+     * Query our product database to find products matching your criteria. Almost all product fields can be searched for and sorted by.
+     * The product finder request provides the same core functionality as our Product Finder.
+     *
+     * @param $domainId
+     * @param ProductFinderRequest $request
+     * @return Request
+     */
+    public static function getFinderRequest($domainId, ProductFinderRequest $request)
+    {
+        $r = new Request();
+        $r->path = "query";
+        $r->parameter["domain"] = $domainId;
+        $r->parameter["selection"] = json_encode(array_filter((array)$request, function ($var) {
+            return !is_null($var);
+        }));
+
+        return $r;
+    }
+
+    /**
+     * Get your token status.
+     *
+     * @return Request ready to send request.
+     */
+    public static function getTokenStatusRequest()
+    {
+        $r = new Request();
+        $r->path = "token";
+
+        return $r;
+    }
+
 
     public function query()
     {

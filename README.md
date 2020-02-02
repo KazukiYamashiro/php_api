@@ -27,7 +27,7 @@ This framework is intended for users of the Keepa API.
 Composer
 -----
 ```bash
-composer require keepa/php_api
+composer require keepa/php_api:*
 ```
 
 <a name="examples"></a>Quick Example
@@ -53,7 +53,7 @@ use Keepa\helper\ProductType;
 use Keepa\KeepaAPI;
 use Keepa\objects\AmazonLocale;
 
-        $api = new KeepaAPI("YOUR-API-KEY");
+        $api = new KeepaAPI("YOUR_API_KEY");
         $r = Request::getProductRequest(AmazonLocale::DE, 0, "2015-12-31", "2018-01-01", 0, true, ['B001G73S50']);
 
         $response = $api->sendRequestWithRetry($r);
@@ -69,7 +69,7 @@ use Keepa\objects\AmazonLocale;
 
 							//check if the product is in stock -1 -> out of stock
 							if ($currentAmazonPrice == -1) {
-                                echo sprintf("%s %s is currently out of stock! %s",$product->asin,$product->title,PHP_EOL);
+                                echo sprintf("%s %s is currently not sold by Amazon (out of stock) %s",$product->asin,$product->title,PHP_EOL);
                             } else {
                                 echo sprintf("%s %s Current Amazon Price: %s %s",$product->asin,$product->title,$currentAmazonPrice,PHP_EOL);
                             }
